@@ -40,11 +40,11 @@ public class Game {
             isWon = true;
             calculateScore();
             isOver = true;
-            return "You won!";
+            return "You won! " + playerName;
         } else if (attemptsMade >= maxAttempts) {
             isOver = true;
             calculateScore();
-            return "You've run out of attempts! The number was " + targetNumber + ".";
+            return "Sorry "+ playerName +" You've run out of attempts! The number was " + targetNumber + ".";
         } else if (playerInput > targetNumber) {
             return "Too High. Attempts left: " + (maxAttempts - attemptsMade);
         } else {
