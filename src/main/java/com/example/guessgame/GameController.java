@@ -1,10 +1,7 @@
 package com.example.guessgame;
 
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -22,5 +19,8 @@ public class GameController {
     public UUID startNewGame(@RequestParam int maxAttempts, @RequestParam int rangeMin, @RequestParam int rangeMax, @RequestParam String playerName) {
         return gameService.startGame(maxAttempts, rangeMin, rangeMax, playerName);
     }
-
+    @PostMapping("/guess")
+    public GuessResponse makeGuess(@RequestBody GuessRequest request) {
+        return gameService.gameGuess(request.getGameID(), request.getGuess());
+    }
 }

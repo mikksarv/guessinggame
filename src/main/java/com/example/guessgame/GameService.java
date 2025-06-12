@@ -16,7 +16,30 @@ public class GameService {
         games.put(gameId, newGame);
         return gameId;
     }
+
+    public GuessResponse gameGuess(UUID gameId, int guess) {
+
+        Game foundGame = games.get(gameId);
+        if (foundGame == null) {
+            return new GuessResponse("No game exists", 0, GuessResponse.gameStatus.LOST);
+        } else {
+            String message = foundGame.makeGuess(guess);
+            GuessResponse.gameStatus status;
+
+            if (foundGame.isWon()) {
+                status = GuessResponse.gameStatus.WON;
+            } else if (foundGame.isOver()) {
+                status = GuessResponse.gameStatus.LOST;
+            } else {
+                status = GuessResponse.gameStatus.ONGOING;
+            }
+            return new GuessResponse(message, foundGame.getMaxAttempts() - foundGame.getAttemptsMade(), status);
+        }
+
+    }
+
 }
+
 
 // TODO delete after usage
 
