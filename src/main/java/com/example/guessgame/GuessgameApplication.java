@@ -13,11 +13,13 @@ public class GuessgameApplication {
         String playerName;
         int rangeMax;
         String difficultySettings;
+        String difficultyName;
 
-        public GameSetup(String playerName, int rangeMax, String difficultySettings) {
+        public GameSetup(String playerName, int rangeMax, String difficultySettings, String difficultyName) {
             this.playerName = playerName;
             this.rangeMax = rangeMax;
             this.difficultySettings = difficultySettings;
+            this.difficultyName = difficultyName;
         }
     }
 
@@ -46,7 +48,7 @@ public class GuessgameApplication {
             switch (choice) {
                 case 1 -> {
                     GameSetup setup = gameSetup(input);
-                    System.out.println(setup.playerName + " Lets start you have 10 attempts. " + setup.difficultySettings);
+                    System.out.println(setup.playerName + " Lets start you have "+ maxAttempts +" attempts. " + setup.difficultySettings);
                     java.util.UUID currentGameId = gameService.startGame(maxAttempts, rangeMin, setup.rangeMax, setup.playerName);
 
                     GuessResponse gameGuess;
@@ -55,12 +57,20 @@ public class GuessgameApplication {
                         System.out.println(gameGuess.message);
                     }
                     while (gameGuess.status == GuessResponse.gameStatus.ONGOING);
-                    if (gameGuess.status == GuessResponse.gameStatus.LOST || gameGuess.status == GuessResponse.gameStatus.WON) {
+                    if (gameGuess.status == GuessResponse.gameStatus.LOST) {
+                        System.out.println("Your score is "+ gameGuess.score + " points");
+                    }
+                    else if (gameGuess.status == GuessResponse.gameStatus.WON) {
+                        gameService.saveScore(gameGuess.getScore(), setup.playerName, setup.difficultySettings, setup.difficultyName);
                         System.out.println("Your score is "+ gameGuess.score + " points");
                     }
                 }
 
-                case 2 -> System.out.println("High Scores not implemented yet.");
+                case 2 -> {
+                    System.out.println("High scores: ");
+                    System.out.println(gameService.getHighScores());
+
+                }
 
                 case 3 -> {
                     exitGame = true;
@@ -79,6 +89,7 @@ public class GuessgameApplication {
     private static GameSetup gameSetup(Scanner input) {
         String playerName;
         String difficulty;
+        String difficultyName= null;
         String difficultySettings = null;
         int rangeMax = 0;
 
@@ -96,21 +107,24 @@ public class GuessgameApplication {
                 rangeMax = 20;
                 difficultySettings = "The number can be between 1-20";
                 validInput = true;
+                difficultyName = "Easy";
             } else if (Objects.equals(difficulty.toLowerCase(), "medium")) {
                 rangeMax = 40;
                 difficultySettings = "The number can be between 1-40";
                 validInput = true;
+                difficultyName = "Medium";
             } else if (Objects.equals(difficulty.toLowerCase(), "hard")) {
                 rangeMax = 100;
                 difficultySettings = "The number can be between 1-100";
                 validInput = true;
+                difficultyName = "Hard";
             } else {
                 System.out.println("Invalid input. Please enter 'easy', 'medium', or 'hard'.");
 
             }
         } while (!validInput);
 
-        return new GameSetup(playerName, rangeMax, difficultySettings);
+        return new GameSetup(playerName, rangeMax, difficultySettings, difficultyName);
     }
 
 }
