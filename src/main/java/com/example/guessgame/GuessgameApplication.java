@@ -55,7 +55,9 @@ public class GuessgameApplication {
                         System.out.println(gameGuess.message);
                     }
                     while (gameGuess.status == GuessResponse.gameStatus.ONGOING);
-
+                    if (gameGuess.status == GuessResponse.gameStatus.LOST || gameGuess.status == GuessResponse.gameStatus.WON) {
+                        System.out.println("Your score is "+ gameGuess.score + " points");
+                    }
                 }
 
                 case 2 -> System.out.println("High Scores not implemented yet.");
@@ -81,11 +83,7 @@ public class GuessgameApplication {
         int rangeMax = 0;
 
         System.out.println("What is your name?");
-
         playerName = input.nextLine();
-        input.nextLine();
-
-        difficulty = input.nextLine();
 
         boolean validInput;
         do {
