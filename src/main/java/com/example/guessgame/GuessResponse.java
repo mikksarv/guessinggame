@@ -11,6 +11,7 @@ public class GuessResponse {
     String message;
     int attemptsLeft;
     gameStatus status;
+    int score;
 
     enum gameStatus {
         ONGOING,

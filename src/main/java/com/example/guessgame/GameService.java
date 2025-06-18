@@ -21,7 +21,7 @@ public class GameService {
 
         Game foundGame = games.get(gameId);
         if (foundGame == null) {
-            return new GuessResponse("No game exists", 0, GuessResponse.gameStatus.LOST);
+            return new GuessResponse("No game exists", 0, GuessResponse.gameStatus.LOST,0);
         } else {
             String message = foundGame.makeGuess(guess);
             GuessResponse.gameStatus status;
@@ -33,28 +33,9 @@ public class GameService {
             } else {
                 status = GuessResponse.gameStatus.ONGOING;
             }
-            return new GuessResponse(message, foundGame.getMaxAttempts() - foundGame.getAttemptsMade(), status);
+            return new GuessResponse(message, foundGame.getMaxAttempts() - foundGame.getAttemptsMade(), status, foundGame.getScore());
         }
 
     }
 
 }
-
-
-// TODO delete after usage
-
-//        int maxAttempts = 0;
-//        int rangeMax = 100;
-//        String playerName = null;
-//
-//        Game game = new Game(maxAttempts, 0, rangeMax, playerName);
-//        Scanner input = new Scanner(System.in);
-//
-//        System.out.println("What is your name?");
-//        playerName = input.nextLine();
-//
-//        System.out.println("Good " + playerName + "now lets choose the maximum attempts for the game (f.ex 10): ");
-//        maxAttempts = input.nextInt();
-//
-//        System.out.println("Choose the range of guessing number starting from 0 (f.ex 100): ");
-//        rangeMax = input.nextInt();
