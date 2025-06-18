@@ -3,8 +3,6 @@ package com.example.guessgame;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-
-import java.sql.SQLOutput;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -45,7 +43,6 @@ public class GuessgameApplication {
             choice = input.nextInt();
             input.nextLine();
 
-
             switch (choice) {
                 case 1 -> {
                     GameSetup setup = gameSetup(input);
@@ -58,7 +55,6 @@ public class GuessgameApplication {
                         System.out.println(gameGuess.message);
                     }
                     while (gameGuess.status == GuessResponse.gameStatus.ONGOING);
-
 
                 }
 
@@ -118,6 +114,5 @@ public class GuessgameApplication {
 
         return new GameSetup(playerName, rangeMax, difficultySettings);
     }
-
 
 }
