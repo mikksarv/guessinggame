@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import java.sql.SQLOutput;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -44,15 +45,24 @@ public class GuessgameApplication {
             choice = input.nextInt();
             input.nextLine();
 
+
             switch (choice) {
                 case 1 -> {
                     GameSetup setup = gameSetup(input);
-                    System.out.println(setup.playerName + " Lets start you have 10 attempts to guess the number between " + setup.difficultySettings);
+                    System.out.println(setup.playerName + " Lets start you have 10 attempts. " + setup.difficultySettings);
                     java.util.UUID currentGameId = gameService.startGame(maxAttempts, rangeMin, setup.rangeMax, setup.playerName);
+
+                    GuessResponse gameGuess;
+                    do {
+                        gameGuess = gameService.gameGuess(currentGameId, input.nextInt());
+                        System.out.println(gameGuess.message);
+                    }
+                    while (gameGuess.status == GuessResponse.gameStatus.ONGOING);
+
+
                 }
 
                 case 2 -> System.out.println("High Scores not implemented yet.");
-
 
                 case 3 -> {
                     exitGame = true;
@@ -77,12 +87,13 @@ public class GuessgameApplication {
         System.out.println("What is your name?");
 
         playerName = input.nextLine();
+        input.nextLine();
 
         difficulty = input.nextLine();
 
         boolean validInput;
         do {
-            System.out.println("Good " + playerName + ", now let's choose the difficulty type: easy, medium, or hard");
+            System.out.println("Good " + playerName + ", now let's choose the difficulty: easy, medium, or hard. For example type: \"medium\"");
             difficulty = input.nextLine();
 
             validInput = false;
